@@ -35,7 +35,7 @@ public class MyRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("Logger 구현체 클래스명 = "+logger.getClass().getName());
+        System.out.println("Logger 구현체 클래스명 = "+logger.getClass().getName()); //->ch.qos.logback.classic.Logger
         //Alt +Shift +Insert 하면 column selection mode로 변환
         logger.info("현재 활성화된 CustomerVO = {}", customerVO);
         logger.info("MyBootProperties getName() = {}", properties.getName());
