@@ -1,5 +1,6 @@
 package com.basic.myspringboot.runner;
 
+import com.basic.myspringboot.config.CustomerVO;
 import com.basic.myspringboot.property.MyBootProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,13 @@ public class MyRunner implements ApplicationRunner {
     @Autowired
     private MyBootProperties properties;
 
+    @Autowired
+    private CustomerVO customerVO;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        System.out.println("현재 활성화된 CustomerVO = " + customerVO);
+
         System.out.println("MyBootProperties getName() = " + properties.getName());
 
         System.out.println("${myboot.name}  = " + name);
@@ -62,5 +68,6 @@ public class MyRunner implements ApplicationRunner {
         //람다식이 단순히 "전달받은 파라미터를 다른 메서드에 그대로 전달만 할 때" 더 줄여서 쓰는 방식. :: 기호를 사용하는 것이 특징
         args.getOptionNames()//Set<String>
                 .forEach(System.out::println);//아규먼트에 넘어온걸 바디에서 바로 독단으로 사용할때
+
     }
 }
