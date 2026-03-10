@@ -13,4 +13,5 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
 
     //2.CustomerName(고객명, 중복허용)로 조회하는 finder 메서드
     List<Customer> findByCustomerName(String customerName);
+
 }
