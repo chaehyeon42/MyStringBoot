@@ -71,4 +71,24 @@ class CustomerRepositoryTest {
         Customer notFoundCustomer = customerRepository.findById(3L)
                 .orElseThrow(() -> new RuntimeException("Customer Not Found")); //조회 값이 없으면 RuntimeException 반환 있으면 Customer 반환
     }
+
+    //3. Update
+    @Test
+    @Rollback(value = false)
+    void testUpdate(){
+        //업데이트라는 메서드가 따로 없어서 반드시 조회 먼저한 후 setter 메서드 호출 해야 업데이트 됨
+        // 3-1.고객번호로 조회
+        // -> 실행 쿼리 :select c1_0.id,c1_0.customer_id,c1_0.customer_name from customers c1_0 where c1_0.customer_id=?
+        Customer customer = customerRepository.findByCustomerId("A002")
+                .orElseThrow(() -> new RuntimeException("Customer Not Found"));
+
+        //3-2. Id명 변경(setter메서드 호출)
+        //지정한 이름만 update 되게 하려면 Entity파일 상단에 @DynamicUpdate(동적인 업데이트가 이루어지도록)를 붙여야함.
+        // -> 실행쿼리 : update customers set customer_name=? where id=?
+        customer.setCustomerName("스프링부트21");
+        //Save호출 (안해도됨) 단, save를 안하려면 위 상단에 @Transactional이 있어야함. 없을땐 save 사용. 있으면 set만 해도 DB에 저장됨
+        //customerRepository.save(customer);
+
+        assertThat(customer.getCustomerName()).isEqualTo("스프링부트21");
+    }
 }
