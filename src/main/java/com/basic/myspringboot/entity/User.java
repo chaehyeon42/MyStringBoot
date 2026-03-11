@@ -7,8 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Table(name = "users") //테이블 명 지정
 @Entity
+@Table(name="users")
 @Getter
 @Setter
 public class User {
@@ -17,13 +17,12 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String name; // NULL 허용 X , 중복 허용 O
+    private String name;
 
     @Column(unique = true, nullable = false)
-    private String email; // NULL 허용 X , 중복 허용 X
+    private String email;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    //LocalDateTime.now(); => createdAt 컬럼에 현재 년월시분초 저장
     private LocalDateTime createdAt = LocalDateTime.now();
 }

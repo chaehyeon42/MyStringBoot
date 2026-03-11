@@ -1,0 +1,47 @@
+package com.basic.myspringboot.controller;
+
+import com.basic.myspringboot.entity.User;
+import com.basic.myspringboot.exception.BusinessException;
+import com.basic.myspringboot.repository.CustomerRepository;
+import com.basic.myspringboot.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/api/users")
+public class UserRestController {
+    private final UserRepository userRepository;
+
+    //Constructor Injection
+//    public UserRestController(UserRepository userRepository) {
+//        log.info("UserRepository 구현클래스명 = {}",userRepository.getClass().getName());
+//        this.userRepository = userRepository;
+//    }
+
+    //User 등록
+    @PostMapping
+    public User create(@RequestBody User userDetail) {
+        return userRepository.save(userDetail);
+    }
+
+    //User 목록 조회
+    @GetMapping
+    public List<User> getUsers(){
+        return userRepository.findAll();
+    }
+
+    //iD로 User 조회
+    @GetMapping("/{id}") //동적인 변수인데 해당 변수를 (@PathVariable Long Id)에 매핑
+    public User getUserById(@PathVariable Long id){
+        User existUser = userRepository.findById(id)  //Optional<User>
+                .orElseThrow(() -> new BusinessException("User Not Found", HttpStatus.NOT_FOUND)); //User
+        return existUser;
+    }
+}
