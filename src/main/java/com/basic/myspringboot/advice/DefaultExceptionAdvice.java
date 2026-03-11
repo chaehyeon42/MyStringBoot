@@ -4,19 +4,24 @@ import com.basic.myspringboot.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
 public class DefaultExceptionAdvice {
 
-    @ExceptionHandler(BusinessException.class)
+    /*@ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorObject> handleResourceNotFoundException(BusinessException ex) {
         ErrorObject errorObject = new ErrorObject(); //에러정보를 담음
         errorObject.setStatusCode(ex.getHttpStatus().value());
@@ -26,20 +31,24 @@ public class DefaultExceptionAdvice {
 
         //ResponseEntity의 역할 : 바디를 내려보낼때 응답 뿐만 아니라 body + statuscode + header 정보를 함께 내려 보내는 역할
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatusCode.valueOf(ex.getHttpStatus().value()));
-    }
+    }*/
 
     /*
         Spring6 버전에 추가된 ProblemDetail 객체에 에러정보를 담아서 리턴하는 방법
      */
-//    @ExceptionHandler(BusinessException.class)
-//    protected ProblemDetail handleException(BusinessException e) {
-//        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getHttpStatus());
-//        problemDetail.setTitle("Not Found");
-//        problemDetail.setDetail(e.getMessage());
-//        problemDetail.setProperty("errorCategory", "Generic");
-//        problemDetail.setProperty("timestamp", Instant.now());
-//        return problemDetail;
-//    }
+    @ExceptionHandler(BusinessException.class)
+    protected ProblemDetail handleException(BusinessException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getHttpStatus());
+        problemDetail.setTitle("Not Found");
+        problemDetail.setDetail(e.getMessage());
+
+       //사용자가 임의로 정의하는 에러코드와 값
+        problemDetail.setProperty("errorCategory", "Generic");
+        problemDetail.setProperty("timestamp",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss E a", Locale.KOREA)
+                        .format(LocalDateTime.now()));
+        return problemDetail;
+   }
 
     //숫자타입의 값에 문자열타입의 값을 입력으로 받았을때 발생하는 오류
     @ExceptionHandler(HttpMessageNotReadableException.class)
