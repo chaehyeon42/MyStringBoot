@@ -77,7 +77,7 @@ public class DefaultExceptionAdvice {
 
     // RuntimeException → Exception으로 변경
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorObject> handleException(Exception e) {
+    protected ResponseEntity<ErrorObject> handleException(RuntimeException e) {
         ErrorObject errorObject = new ErrorObject();
         // 예외 타입에 따라 적절한 status code 동적 결정
         HttpStatus status = resolveHttpStatus(e);
@@ -94,8 +94,8 @@ public class DefaultExceptionAdvice {
             return HttpStatus.UNSUPPORTED_MEDIA_TYPE; // 415
         } else if (e instanceof MissingServletRequestParameterException) {
             return HttpStatus.BAD_REQUEST; // 400
-        } else if (e instanceof NoResourceFoundException) {
-            return HttpStatus.NOT_FOUND; // 404
+//        } else if (e instanceof NoResourceFoundException) {
+//            return HttpStatus.NOT_FOUND; // 404
 //        } else if (e instanceof AccessDeniedException) {
 //            return HttpStatus.FORBIDDEN; // 403
         }
