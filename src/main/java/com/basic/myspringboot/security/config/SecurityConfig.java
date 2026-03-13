@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -44,10 +45,12 @@ public class SecurityConfig {
                     // /api/users/welcome 경로는 인증없이 접근 가능
                     auth.requestMatchers("/api/users/welcome").permitAll()
                             // /api/users/** 인증 후에 접근 가능
-                            .requestMatchers("/api/users/**").authenticated();
+                            .requestMatchers("/api/users/**").permitAll();
+                    //.authenticated();
                 })
                 //spring이 제공하는 login form을 사용
                 .formLogin(withDefaults())
                 .build();
     }
+
 }
