@@ -20,8 +20,13 @@ public class UserInfoUserDetails implements UserDetails {
         this.userInfo = userInfo;
         this.email=userInfo.getEmail();
         this.password=userInfo.getPassword();
+        //roles 문자열에 : ROLE_ADMIN, ROLE_USER 이런식으로 저장됨
+                                        //Stream 배열 -> (userInfo.getRoles().split(",")
         this.authorities= Arrays.stream(userInfo.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
+                //람다식                 Stream 출력 : SimpleGrantedAuthority   / 입력값 : roleName
+                .map(roleName -> new SimpleGrantedAuthority(roleName))
+                // .map(SimpleGrantedAuthority::new)
+                //Stream에 담겨진 SimpleGrantedAuthority를 List의 SimpleGrantedAuthority로 변경 -> List<SimpleGrantedAuthority>
                 .collect(Collectors.toList());
     }
 
@@ -30,6 +35,8 @@ public class UserInfoUserDetails implements UserDetails {
         return authorities;
     }
 
+    /*getUsername과 getPassword 메서드는 AuthenticationManager가
+       인증처리를 할때 호출하는 메서드*/
     @Override
     public String getPassword() {
         return password;
@@ -39,7 +46,7 @@ public class UserInfoUserDetails implements UserDetails {
     public String getUsername() {
         return email;
     }
-    
+
     public UserInfo getUserInfo() {
         return userInfo;
     }    
